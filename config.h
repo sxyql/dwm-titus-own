@@ -95,14 +95,12 @@ static const char *termcmd[]     = { "alacritty", NULL };
 static Key keys[] = {
     /* modifier                     key                        function        argument */
     { MODKEY,                       XK_r,                      spawn,          {.v = launchercmd} },
-    { MODKEY|ControlMask,           XK_r,                      spawn,          SHCMD ("protonrestart")},
     { MODKEY,                       XK_x,                      spawn,          {.v = termcmd } },
     { MODKEY,                       XK_b,                      spawn,          SHCMD ("xdg-open https://")},
     { MODKEY,                       XK_p,                      spawn,          SHCMD ("flameshot full -p /media/drive/Screenshots/")},
     { MODKEY|ShiftMask,             XK_p,                      spawn,          SHCMD ("flameshot gui -p /media/drive/Screenshots/")},
     { MODKEY|ControlMask,           XK_p,                      spawn,          SHCMD ("flameshot gui --clipboard")},
     { MODKEY,                       XK_e,                      spawn,          SHCMD ("thunar")},
-    { MODKEY,                       XK_w,                      spawn,          SHCMD ("looking-glass-client -F")},
     { MODKEY|ShiftMask,             XK_w,                      spawn,          SHCMD ("feh --randomize --bg-fill ~/Pictures/backgrounds/*")},
     { 0,                            XF86XK_MonBrightnessUp,    spawn,          SHCMD ("xbacklight -inc 10")},
     { 0,                            XF86XK_MonBrightnessDown,  spawn,          SHCMD ("xbacklight -dec 10")},
