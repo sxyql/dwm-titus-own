@@ -3,19 +3,28 @@
 # Function to install dependencies for Debian-based distributions
 install_debian() {
     sudo apt update
-    sudo apt install libconfig-dev libdbus-1-dev libegl-dev libev-dev libgl-dev libepoxy-dev libpcre2-dev libpixman-1-dev libx11-xcb-dev libxcb1-dev libxcb-composite0-dev libxcb-damage0-dev libxcb-dpms0-dev libxcb-glx0-dev libxcb-image0-dev libxcb-present-dev libxcb-randr0-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-shape0-dev libxcb-util-dev libxcb-xfixes0-dev libxext-dev meson ninja-build uthash-dev cmake libxft-dev libimlib2-dev libxinerama-dev libxcb-res0-dev alsa-utils thunar feh flameshot dunst
+    sudo apt install libconfig-dev libdbus-1-dev libegl-dev libev-dev libgl-dev libepoxy-dev \
+    libpcre2-dev libpixman-1-dev libx11-xcb-dev libxcb1-dev libxcb-composite0-dev libxcb-damage0-dev \
+    libxcb-dpms0-dev libxcb-glx0-dev libxcb-image0-dev libxcb-present-dev libxcb-randr0-dev libxcb-render0-dev \
+    libxcb-render-util0-dev libxcb-shape0-dev libxcb-util-dev libxcb-xfixes0-dev libxext-dev meson ninja-build \
+    uthash-dev cmake libxft-dev libimlib2-dev libxinerama-dev libxcb-res0-dev alsa-utils thunar feh flameshot dunst rofi alacritty unzip
 }
 
 # Function to install dependencies for Red Hat-based distributions
 install_fedora() {
     sudo dnf groupinstall "Development Tools"
-    sudo dnf install dbus-devel gcc git libconfig-devel libdrm-devel libev-devel libX11-devel libX11-xcb libXext-devel libxcb-devel libGL-devel libEGL-devel libepoxy-devel meson ninja-build pcre2-devel pixman-devel uthash-devel xcb-util-image-devel xcb-util-renderutil-devel xorg-x11-proto-devel xcb-util-devel cmake alsa-utils thunar feh flameshot dunst libXft
+    sudo dnf install dbus-devel gcc git libconfig-devel libdrm-devel libev-devel libX11-devel libX11-xcb libXext-devel \
+    libxcb-devel libGL-devel libEGL-devel libepoxy-devel meson ninja-build pcre2-devel pixman-devel uthash-devel \
+    xcb-util-image-devel xcb-util-renderutil-devel xorg-x11-proto-devel xcb-util-devel cmake alsa-utils thunar feh \
+    flameshot dunst libXft rofi alacritty unzip
 }
 
 # Function to install dependencies for Arch-based distributions
 install_arch() {
     sudo pacman -Su --noconfirm
-    sudo pacman -S --needed base-devel libconfig dbus libev libx11 libxcb libxext libgl libegl libepoxy meson pcre2 pixman uthash xcb-util-image xcb-util-renderutil xorgproto cmake libxft libimlib2 libxinerama libxcb-res xorg-xev xorg-xbacklight alsa-utils thunar feh flameshot dunst
+    sudo pacman -S --needed base-devel libconfig dbus libev libx11 libxcb libxext libgl libegl libepoxy meson pcre2 pixman \
+    uthash xcb-util-image xcb-util-renderutil xorgproto cmake libxft libimlib2 libxinerama libxcb-res xorg-xev xorg-xbacklight \
+    alsa-utils thunar feh flameshot dunst rofi alacritty unzip
 }
 
 # Detect the distribution and install the appropriate packages
@@ -190,6 +199,12 @@ configure_backgrounds() {
     fi
 }
 
+slstatus() {
+    cd .slstatus || exit
+    make
+    sudo make install
+}
+
 # Call the function
 install_nerd_font
 
@@ -201,5 +216,8 @@ picom_animations
 
 # Call the function
 configure_backgrounds
+
+#Call the function
+slstatus
 
 echo "All dependencies installed successfully."
