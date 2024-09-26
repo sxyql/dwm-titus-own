@@ -36,13 +36,13 @@ static const char *const autostart[] = {
     "xset", "-dpms", NULL,
     "dbus-update-activation-environment", "--systemd", "--all", NULL,
     "/usr/lib/mate-polkit/polkit-mate-authentication-agent-1", NULL,
-    "flameshot", NULL,
     "dunst", NULL,
     "picom", "-b", NULL,
     "sh", "-c", "feh --randomize --bg-fill ~/Pictures/backgrounds/*", NULL,
     "synergy", NULL,
     "slstatus", NULL,
     NULL /* terminate */
+    /*"flameshot", NULL,*/
 };
 
 /* tagging */
@@ -94,6 +94,7 @@ static const char *termcmd[]     = { "alacritty", NULL };
 
 static Key keys[] = {
     /* modifier                     key                        function        argument */
+    { MODKEY|ShiftMask,             XK_f,                         spawn,           SHCMD ("flameshot")},
     { MODKEY,                       XK_r,                      spawn,          {.v = launchercmd} },
     { MODKEY,                       XK_x,                      spawn,          {.v = termcmd } },
     { MODKEY,                       XK_b,                      spawn,          SHCMD ("xdg-open https://")},
