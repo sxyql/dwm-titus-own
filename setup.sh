@@ -183,14 +183,15 @@ configure_backgrounds() {
     
     # Check if the backgrounds directory (BG_DIR) exists
     if [ ! -d "$BG_DIR" ]; then
+        mkdir "$BG_DIR"
         # If the backgrounds directory doesn't exist, attempt to clone a repository containing backgrounds
-        if ! git clone https://github.com/ChrisTitusTech/nord-background.git ~/Pictures; then
+        if ! git clone https://github.com/ChrisTitusTech/nord-background.git "$BG_DIR"; then
             # If the git clone command fails, print an error message and return with a status of 1
             echo "Failed to clone the repository"
             return 1
         fi
         # Rename the cloned directory to 'backgrounds'
-        mv ~/Pictures/nord-background ~/Pictures/backgrounds
+        #mv ~/Pictures/nord-background ~/Pictures/backgrounds
         # Print a success message indicating that the backgrounds have been downloaded
         echo "Downloaded desktop backgrounds to $BG_DIR"    
     else
