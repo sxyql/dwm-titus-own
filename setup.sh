@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#error
 
 # Error on all systems runtime dependency libev not foundcd
 
