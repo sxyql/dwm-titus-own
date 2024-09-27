@@ -206,6 +206,7 @@ configure_backgrounds() {
 
 # Function to install slstatus
 slstatus() {
+    pwd
     ls
     cd slstatus || { log_error "Failed to change directory to slstatus"; exit 1; }
     make || { log_error "Failed to build slstatus"; exit 1; }
