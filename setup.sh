@@ -1,7 +1,4 @@
 #!/bin/bash
-#error
-
-# Error on all systems runtime dependency libev not foundcd
 
 # Function to install dependencies for Debian-based distributions
 install_debian() {
