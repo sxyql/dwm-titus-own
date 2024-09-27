@@ -19,7 +19,8 @@ install_debian() {
     libxcb-dpms0-dev libxcb-glx0-dev libxcb-image0-dev libxcb-present-dev libxcb-randr0-dev libxcb-render0-dev \
     libxcb-render-util0-dev libxcb-shape0-dev libxcb-util-dev libxcb-xfixes0-dev libxext-dev meson ninja-build \
     uthash-dev cmake libxft-dev libimlib2-dev libxinerama-dev libxcb-res0-dev alsa-utils thunar feh flameshot dunst \
-    rofi alacritty unzip wget curl bash-completion lightdm || { log_error "Failed to install dependencies"; }
+    rofi alacritty unzip wget curl bash-completion lightdm fastfetch starship \
+    zoxide|| { log_error "Failed to install dependencies"; }
     sudo apt autoremove || { log_error "Failed to remove unused packages"; }
     sudo apt autoclean || { log_error "Failed to clean package cache"; }
 }
@@ -32,11 +33,11 @@ install_redhat() {
     libXext-devel libxcb-devel libGL-devel libEGL-devel libepoxy-devel meson ninja-build pcre2-devel pixman-devel \
     uthash-devel xcb-util-image-devel xcb-util-renderutil-devel xorg-x11-proto-devel xcb-util-devel cmake \
     libxft-devel libimlib2-devel libxinerama-devel libxcb-res0-devel alacritty thunar feh flameshot dunst rofi \
-    alsa-utils btop htop trash-cli || { log_error "Failed to install dependencies"; }
+    alsa-utils btop htop trash-cli fastfetch starship zoxide || { log_error "Failed to install dependencies"; }
     sudo yum autoremove || { log_error "Failed to remove unused packages"; }
     sudo yum clean all || { log_error "Failed to clean package cache"; }
 }
-
+starship zoxide
 # Function to install dependencies for Fedora
 install_fedora() {
     sudo dnf update || { log_error "Failed to update package list and installing updates"; exit 1; }
@@ -45,7 +46,8 @@ install_fedora() {
     libXext-devel libxcb-devel libGL-devel libEGL-devel libepoxy-devel libXft-devel imlib2-devel \
     libXinerama-devel  meson ninja-build pcre2-devel pixman-devel uthash-devel xcb-util-image-devel \
     xcb-util-renderutil-devel xorg-x11-proto-devel xcb-util-devel cmake alsa-utils thunar feh flameshot dunst \
-    libXft rofi alacritty unzip wget curl bash-completion btop htop trash-cli || { log_error "Failed to install dependencies"; }
+    libXft rofi alacritty unzip wget curl bash-completion btop htop trash-cli fastfetch  starship \
+    zoxide || { log_error "Failed to install dependencies"; }
     sudo dnf autoremove || { log_error "Failed to remove unused packages"; }
     sudo dnf clean all || { log_error "Failed to clean package cache"; }
 }
