@@ -58,7 +58,7 @@ install_arch() {
     sudo pacman -S --needed --noconfirm base-devel libconfig git dbus libev libx11 libxcb libxext libgl libegl libepoxy meson pcre2 \
     pixman uthash xcb-util-image xcb-util-renderutil xorgproto cmake libxft imlib2 libxinerama xcb-util-wm xorg-xev \
     xorg-xbacklight alsa-utils thunar feh flameshot dunst rofi alacritty unzip wget curl sddm btop htop \
-    bash-completion trash-cli || { log_error "Failed to install dependencies"; exit 1; }
+    bash-completion trash-cli fastfetch || { log_error "Failed to install dependencies"; exit 1; }
     sudo pacman -Rns "$(pacman -Qdtq)" || { log_error "Failed to remove unused packages"; }
     sudo pacman -Sc --noconfirm || { log_error "Failed to clean package cache"; exit 1; }
 }
