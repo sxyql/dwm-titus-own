@@ -240,7 +240,7 @@ slstatus() {
 }
 
 copybashrc() {
-    wget -O - https://raw.githubusercontent.com/sxyql/mybash/refs/heads/main/.bashrc | tee -a ~/.bashrc /root/.bashrc > /dev/null
+    wget -O - https://raw.githubusercontent.com/sxyql/mybash/refs/heads/main/.bashrc | sudo tee -a ~/.bashrc /root/.bashrc > /dev/null
 }
 
 # Call the functions
