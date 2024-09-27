@@ -1,30 +1,46 @@
 #!/bin/bash
 
+# Exit immediately if a command exits with a non-zero status
+set -e
+
+# Function to log errors
+log_error() {
+    echo "[ERROR] $1" >&2
+}
+
+# Trap errors and perform cleanup
+trap 'log_error "An error occurred. Exiting..."; exit 1' ERR
+
 # Function to install dependencies for Debian-based distributions
 install_debian() {
-    sudo apt update
+    sudo apt update || { log_error "Failed to update package list"; exit 1; }
     sudo apt install libconfig-dev libdbus-1-dev libegl-dev libev-dev libgl-dev libepoxy-dev \
     libpcre2-dev libpixman-1-dev libx11-xcb-dev libxcb1-dev libxcb-composite0-dev libxcb-damage0-dev \
     libxcb-dpms0-dev libxcb-glx0-dev libxcb-image0-dev libxcb-present-dev libxcb-randr0-dev libxcb-render0-dev \
     libxcb-render-util0-dev libxcb-shape0-dev libxcb-util-dev libxcb-xfixes0-dev libxext-dev meson ninja-build \
-    uthash-dev cmake libxft-dev libimlib2-dev libxinerama-dev libxcb-res0-dev alsa-utils thunar feh flameshot dunst rofi alacritty unzip
+    uthash-dev cmake libxft-dev libimlib2-dev libxinerama-dev libxcb-res0-dev alsa-utils thunar feh flameshot dunst \
+    rofi alacritty unzip wget curl bash-completion || { log_error "Failed to install dependencies"; exit 1; }
+
 }
 
 # Function to install dependencies for Red Hat-based distributions
 install_fedora() {
-    sudo dnf groupinstall "Development Tools"
-    sudo dnf install dbus-devel gcc git libconfig-devel libdrm-devel libev-devel libX11-devel libX11-xcb libXext-devel \
-    libxcb-devel libGL-devel libEGL-devel libepoxy-devel meson ninja-build pcre2-devel pixman-devel uthash-devel \
-    xcb-util-image-devel xcb-util-renderutil-devel xorg-x11-proto-devel xcb-util-devel cmake alsa-utils thunar feh \
-    flameshot dunst libXft rofi alacritty unzip libXft-devel imlib2-devel libXinerama-devel
+    sudo dnf update || { log_error "Failed to update package list"; exit 1; }
+    sudo dnf groupinstall "Development Tools" || { log_error "Failed to install development tools"; exit 1; }
+    sudo dnf install dbus-devel gcc git libconfig-devel libdrm-devel libev-devel libX11-devel libX11-xcb \
+    libXext-devel libxcb-devel libGL-devel libEGL-devel libepoxy-devel libXft-devel imlib2-devel \
+    libXinerama-devel  meson ninja-build pcre2-devel pixman-devel uthash-devel xcb-util-image-devel \
+    xcb-util-renderutil-devel xorg-x11-proto-devel xcb-util-devel cmake alsa-utils thunar feh flameshot dunst \
+    libXft rofi alacritty unzip wget curl bash-completion || { log_error "Failed to install dependencies"; exit 1; }
 }
 
 # Function to install dependencies for Arch-based distributions
 install_arch() {
-    sudo pacman -Su --noconfirm
-    sudo pacman -S --needed base-devel libconfig dbus libev libx11 libxcb libxext libgl libegl libepoxy meson pcre2 pixman \
-    uthash xcb-util-image xcb-util-renderutil xorgproto cmake libxft libimlib2 libxinerama libxcb-res xorg-xev xorg-xbacklight \
-    alsa-utils thunar feh flameshot dunst rofi alacritty unzip
+    sudo pacman -Su --noconfirm || { log_error "Failed to update package list"; exit 1; }
+    sudo pacman -S --needed  base-devel libconfig dbus libev libx11 libxcb libxext libgl libegl libepoxy meson pcre2 \
+    pixman uthash xcb-util-image xcb-util-renderutil xorgproto cmake libxft libimlib2 libxinerama libxcb-res xorg-xev \
+    xorg-xbacklight alsa-utils thunar feh flameshot dunst rofi alacritty unzip wget curl \
+    bash-completion || { log_error "Failed to install dependencies"; exit 1; }
 }
 
 # Detect the distribution and install the appropriate packages
@@ -37,15 +53,10 @@ if [ -f /etc/os-release ]; then
             install_debian
             ;;
 
-        fedora)
+        fedora|centos)
             echo "Detected Fedora-based distribution"
             echo "Installing dependencies using dnf"
             install_fedora
-            ;;
-        rhel|centos)
-            echo "Detected Red Hat-based distribution"
-            echo "Installing dependencies using Yellowdog Updater Modified"
-            install_redhat
             ;;
         arch)
             echo "Detected Arch-based distribution"
@@ -58,11 +69,11 @@ if [ -f /etc/os-release ]; then
             ;;
     esac
 else
-    echo "/etc/os-release not found. Unsupported distribution"
+    log_error "/etc/os-release not found. Unsupported distribution"
     exit 1
 fi
 
-# Function to install Meslo Nerd font for dwm and rofi icons to work
+# Function to install Meslo Nerd font for dwm and Rofi icons to work
 install_nerd_font() {
     FONT_DIR="$HOME/.local/share/fonts"
     FONT_ZIP="$FONT_DIR/Meslo.zip"
