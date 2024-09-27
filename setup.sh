@@ -17,10 +17,25 @@ install_debian() {
     libxcb-dpms0-dev libxcb-glx0-dev libxcb-image0-dev libxcb-present-dev libxcb-randr0-dev libxcb-render0-dev \
     libxcb-render-util0-dev libxcb-shape0-dev libxcb-util-dev libxcb-xfixes0-dev libxext-dev meson ninja-build \
     uthash-dev cmake libxft-dev libimlib2-dev libxinerama-dev libxcb-res0-dev alsa-utils thunar feh flameshot dunst \
-    rofi alacritty unzip wget curl bash-completion lightdm|| { log_error "Failed to install dependencies"; }
+    rofi alacritty unzip wget curl bash-completion lightdm || { log_error "Failed to install dependencies"; }
+    sudo apt autoremove || { log_error "Failed to remove unused packages"; }
+    sudo apt autoclean || { log_error "Failed to clean package cache"; }
 }
 
+
 # Function to install dependencies for Red Hat-based distributions
+install_redhat() {
+    sudo yum groupinstall -y "Development Tools" || { log_error "Failed to install development tools"; exit 1; }
+    sudo yum install -y dbus-devel gcc git libconfig-devel libdrm-devel libev-devel libX11-devel libX11-xcb \
+    libXext-devel libxcb-devel libGL-devel libEGL-devel libepoxy-devel meson ninja-build pcre2-devel pixman-devel \
+    uthash-devel xcb-util-image-devel xcb-util-renderutil-devel xorg-x11-proto-devel xcb-util-devel cmake \
+    libxft-devel libimlib2-devel libxinerama-devel libxcb-res0-devel alacritty thunar feh flameshot dunst rofi \
+    alsa-utils || { log_error "Failed to install dependencies"; }
+    sudo yum autoremove || { log_error "Failed to remove unused packages"; }
+    sudo yum clean all || { log_error "Failed to clean package cache"; }
+}
+
+# Function to install dependencies for Fedora
 install_fedora() {
     sudo dnf update || { log_error "Failed to update package list and installing updates"; exit 1; }
     sudo dnf groupinstall "Development Tools" || { log_error "Failed to install development tools"; exit 1; }
@@ -29,15 +44,19 @@ install_fedora() {
     libXinerama-devel  meson ninja-build pcre2-devel pixman-devel uthash-devel xcb-util-image-devel \
     xcb-util-renderutil-devel xorg-x11-proto-devel xcb-util-devel cmake alsa-utils thunar feh flameshot dunst \
     libXft rofi alacritty unzip wget curl bash-completion || { log_error "Failed to install dependencies"; }
+    sudo dnf autoremove || { log_error "Failed to remove unused packages"; }
+    sudo dnf clean all || { log_error "Failed to clean package cache"; }
 }
 
 # Function to install dependencies for Arch-based distributions
 install_arch() {
     sudo pacman -Su --noconfirm || { log_error "Failed to update package list"; exit 1; }
-    sudo pacman -S --needed  base-devel libconfig dbus libev libx11 libxcb libxext libgl libegl libepoxy meson pcre2 \
+    sudo pacman -S --needed  base-devel libconfig git dbus libev libx11 libxcb libxext libgl libegl libepoxy meson pcre2 \
     pixman uthash xcb-util-image xcb-util-renderutil xorgproto cmake libxft libimlib2 libxinerama libxcb-res xorg-xev \
     xorg-xbacklight alsa-utils thunar feh flameshot dunst rofi alacritty unzip wget curl sddm \
     bash-completion || { log_error "Failed to install dependencies"; exit 1; }
+    sudo pacman -Rns "$(pacman -Qdtq)" || { log_error "Failed to remove unused packages"; }
+    sudo pacman -Sc --noconfirm || { log_error "Failed to clean package cache"; exit 1; }
 }
 
 # Detect the distribution and install the appropriate packages
@@ -49,7 +68,12 @@ if [ -f /etc/os-release ]; then
             echo "Installing Dependencies using apt"
             install_debian
             ;;
-        fedora|centos)
+        rhel|centos)
+            echo "Detected Red Hat-based distribution"
+            echo "Installing dependencies using Yellowdog Updater Modified"
+            install_redhat
+            ;;
+        fedora)
             echo "Detected Fedora-based distribution"
             echo "Installing dependencies using dnf"
             install_fedora
