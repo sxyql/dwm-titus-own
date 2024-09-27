@@ -32,7 +32,7 @@ install_redhat() {
     libXext-devel libxcb-devel libGL-devel libEGL-devel libepoxy-devel meson ninja-build pcre2-devel pixman-devel \
     uthash-devel xcb-util-image-devel xcb-util-renderutil-devel xorg-x11-proto-devel xcb-util-devel cmake \
     libxft-devel libimlib2-devel libxinerama-devel libxcb-res0-devel alacritty thunar feh flameshot dunst rofi \
-    alsa-utils || { log_error "Failed to install dependencies"; }
+    alsa-utils btop htop || { log_error "Failed to install dependencies"; }
     sudo yum autoremove || { log_error "Failed to remove unused packages"; }
     sudo yum clean all || { log_error "Failed to clean package cache"; }
 }
@@ -45,7 +45,7 @@ install_fedora() {
     libXext-devel libxcb-devel libGL-devel libEGL-devel libepoxy-devel libXft-devel imlib2-devel \
     libXinerama-devel  meson ninja-build pcre2-devel pixman-devel uthash-devel xcb-util-image-devel \
     xcb-util-renderutil-devel xorg-x11-proto-devel xcb-util-devel cmake alsa-utils thunar feh flameshot dunst \
-    libXft rofi alacritty unzip wget curl bash-completion || { log_error "Failed to install dependencies"; }
+    libXft rofi alacritty unzip wget curl bash-completion btop htop || { log_error "Failed to install dependencies"; }
     sudo dnf autoremove || { log_error "Failed to remove unused packages"; }
     sudo dnf clean all || { log_error "Failed to clean package cache"; }
 }
@@ -55,7 +55,7 @@ install_arch() {
     sudo pacman -Su --noconfirm || { log_error "Failed to update package list"; exit 1; }
     sudo pacman -S --needed --noconfirm base-devel libconfig git dbus libev libx11 libxcb libxext libgl libegl libepoxy meson pcre2 \
     pixman uthash xcb-util-image xcb-util-renderutil xorgproto cmake libxft imlib2 libxinerama xcb-util-wm xorg-xev \
-    xorg-xbacklight alsa-utils thunar feh flameshot dunst rofi alacritty unzip wget curl sddm \
+    xorg-xbacklight alsa-utils thunar feh flameshot dunst rofi alacritty unzip wget curl sddm btop htop \
     bash-completion || { log_error "Failed to install dependencies"; exit 1; }
     sudo pacman -Rns "$(pacman -Qdtq)" || { log_error "Failed to remove unused packages"; }
     sudo pacman -Sc --noconfirm || { log_error "Failed to clean package cache"; exit 1; }
