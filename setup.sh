@@ -241,8 +241,15 @@ slstatus() {
     cd ..
 }
 
-copybashrc() {
+copybashfile() {
     wget -O - https://raw.githubusercontent.com/sxyql/mybash/refs/heads/main/.bashrc | sudo tee -a ~/.bashrc /root/.bashrc > /dev/null
+}
+
+install_dwm() {
+    cd ~/dwm-titus-own || { log_error "Failed to change directory to dwm"; exit 1; }
+    make || { log_error "Failed to build dwm"; exit 1; }
+    sudo make install || { log_error "Failed to install dwm"; exit 1; }
+    cd ..
 }
 
 # Call the functions
@@ -251,6 +258,7 @@ clone_config_folders
 picom_animations
 configure_backgrounds
 slstatus
-copybashrc
+copybashfile
+install_dwm
 
 echo "All dependencies installed successfully."
