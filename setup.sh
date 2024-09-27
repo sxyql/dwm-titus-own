@@ -14,23 +14,24 @@ trap 'log_error "An error occurred. Exiting..."; exit 1' ERR
 # Function to install dependencies for Debian-based distributions
 install_debian() {
     sudo apt update || { log_error "Failed to update package list"; exit 1; }
+    sudo apt full-upgrade -y || { log_error "Failed to upgrade packages"; exit 1; }
     sudo apt install libconfig-dev libdbus-1-dev libegl-dev libev-dev libgl-dev libepoxy-dev \
     libpcre2-dev libpixman-1-dev libx11-xcb-dev libxcb1-dev libxcb-composite0-dev libxcb-damage0-dev \
     libxcb-dpms0-dev libxcb-glx0-dev libxcb-image0-dev libxcb-present-dev libxcb-randr0-dev libxcb-render0-dev \
     libxcb-render-util0-dev libxcb-shape0-dev libxcb-util-dev libxcb-xfixes0-dev libxext-dev meson ninja-build \
     uthash-dev cmake libxft-dev libimlib2-dev libxinerama-dev libxcb-res0-dev alsa-utils thunar feh flameshot dunst \
-    rofi alacritty unzip wget curl bash-completion || { log_error "Failed to install dependencies"; exit 1; }
+    rofi alacritty unzip wget curl bash-completion || { log_error "Failed to install dependencies"; }
 }
 
 # Function to install dependencies for Red Hat-based distributions
 install_fedora() {
-    sudo dnf update || { log_error "Failed to update package list"; exit 1; }
+    sudo dnf update || { log_error "Failed to update package list and installing updates"; exit 1; }
     sudo dnf groupinstall "Development Tools" || { log_error "Failed to install development tools"; exit 1; }
     sudo dnf install dbus-devel gcc git libconfig-devel libdrm-devel libev-devel libX11-devel libX11-xcb \
     libXext-devel libxcb-devel libGL-devel libEGL-devel libepoxy-devel libXft-devel imlib2-devel \
     libXinerama-devel  meson ninja-build pcre2-devel pixman-devel uthash-devel xcb-util-image-devel \
     xcb-util-renderutil-devel xorg-x11-proto-devel xcb-util-devel cmake alsa-utils thunar feh flameshot dunst \
-    libXft rofi alacritty unzip wget curl bash-completion || { log_error "Failed to install dependencies"; exit 1; }
+    libXft rofi alacritty unzip wget curl bash-completion || { log_error "Failed to install dependencies"; }
 }
 
 # Function to install dependencies for Arch-based distributions
