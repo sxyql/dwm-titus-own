@@ -20,7 +20,6 @@ install_debian() {
     libxcb-render-util0-dev libxcb-shape0-dev libxcb-util-dev libxcb-xfixes0-dev libxext-dev meson ninja-build \
     uthash-dev cmake libxft-dev libimlib2-dev libxinerama-dev libxcb-res0-dev alsa-utils thunar feh flameshot dunst \
     rofi alacritty unzip wget curl bash-completion || { log_error "Failed to install dependencies"; exit 1; }
-
 }
 
 # Function to install dependencies for Red Hat-based distributions
@@ -52,7 +51,6 @@ if [ -f /etc/os-release ]; then
             echo "Installing Dependencies using apt"
             install_debian
             ;;
-
         fedora|centos)
             echo "Detected Fedora-based distribution"
             echo "Installing dependencies using dnf"
@@ -64,7 +62,7 @@ if [ -f /etc/os-release ]; then
             install_arch
             ;;
         *)
-            echo "Unsupported distribution"
+            log_error "Unsupported distribution"
             exit 1
             ;;
     esac
@@ -91,7 +89,7 @@ install_nerd_font() {
     # Create the fonts directory if it doesn't exist
     if [ ! -d "$FONT_DIR" ]; then
         mkdir -p "$FONT_DIR" || {
-            echo "Failed to create directory: $FONT_DIR"
+            log_error "Failed to create directory: $FONT_DIR"
             return 1
         }
     else
@@ -102,7 +100,7 @@ install_nerd_font() {
     if [ ! -f "$FONT_ZIP" ]; then
         # Download the font zip file
         wget -P "$FONT_DIR" "$FONT_URL" || {
-            echo "Failed to download Meslo Nerd-fonts from $FONT_URL"
+            log_error "Failed to download Meslo Nerd-fonts from $FONT_URL"
             return 1
         }
     else
@@ -112,7 +110,7 @@ install_nerd_font() {
     # Unzip the font file if it hasn't been unzipped yet
     if [ ! -d "$FONT_DIR/Meslo" ]; then
         unzip "$FONT_ZIP" -d "$FONT_DIR" || {
-            echo "Failed to unzip $FONT_ZIP"
+            log_error "Failed to unzip $FONT_ZIP"
             return 1
         }
     else
@@ -121,53 +119,55 @@ install_nerd_font() {
 
     # Remove the zip file
     rm "$FONT_ZIP" || {
-        echo "Failed to remove $FONT_ZIP"
+        log_error "Failed to remove $FONT_ZIP"
         return 1
     }
 
     # Rebuild the font cache
     fc-cache -fv || {
-        echo "Failed to rebuild font cache"
+        log_error "Failed to rebuild font cache"
         return 1
     }
 
     echo "Meslo Nerd-fonts installed successfully"
 }
 
+# Function to install Picom animations
 picom_animations() {
     # Clone the repository in the home/build directory
     mkdir -p ~/build
     if [ ! -d ~/build/picom ]; then
         if ! git clone https://github.com/FT-Labs/picom.git ~/build/picom; then
-            echo "Failed to clone the repository"
+            log_error "Failed to clone the repository"
             return 1
         fi
     else
         echo "Repository already exists, skipping clone"
     fi
 
-    cd ~/build/picom || { echo "Failed to change directory to picom"; return 1; }
+    cd ~/build/picom || { log_error "Failed to change directory to picom"; return 1; }
 
     # Build the project
     if ! meson setup --buildtype=release build; then
-        echo "Meson setup failed"
+        log_error "Meson setup failed"
         return 1
     fi
 
     if ! ninja -C build; then
-        echo "Ninja build failed"
+        log_error "Ninja build failed"
         return 1
     fi
 
     # Install the built binary
     if ! sudo ninja -C build install; then
-        echo "Failed to install the built binary"
+        log_error "Failed to install the built binary"
         return 1
     fi
 
     echo "Picom animations installed successfully"
 }
 
+# Function to clone configuration folders
 clone_config_folders() {
     # Ensure the target directory exists
     [ ! -d ~/.config ] && mkdir -p ~/.config
@@ -182,55 +182,43 @@ clone_config_folders() {
             cp -r "$dir" ~/.config/
             echo "Cloned $dir_name to ~/.config/"
         else
-            echo "Directory $dir_name does not exist, skipping"
+            log_error "Directory $dir_name does not exist, skipping"
         fi
     done
 }
 
+# Function to configure backgrounds
 configure_backgrounds() {
     # Set the variable BG_DIR to the path where backgrounds will be stored
     BG_DIR="$HOME/Pictures/backgrounds"
 
-    
     # Check if the backgrounds directory (BG_DIR) exists
     if [ ! -d "$BG_DIR" ]; then
         mkdir "$BG_DIR"
         # If the backgrounds directory doesn't exist, attempt to clone a repository containing backgrounds
         if ! git clone https://github.com/ChrisTitusTech/nord-background.git "$BG_DIR"; then
-            # If the git clone command fails, print an error message and return with a status of 1
-            echo "Failed to clone the repository"
+            log_error "Failed to clone the repository"
             return 1
         fi
-        # Rename the cloned directory to 'backgrounds'
-        #mv ~/Pictures/nord-background ~/Pictures/backgrounds
-        # Print a success message indicating that the backgrounds have been downloaded
-        echo "Downloaded desktop backgrounds to $BG_DIR"    
+        echo "Downloaded desktop backgrounds to $BG_DIR"
     else
-        # If the backgrounds directory already exists, print a message indicating that the download is being skipped
         echo "Path $BG_DIR exists for desktop backgrounds, skipping download of backgrounds"
     fi
 }
 
+# Function to install slstatus
 slstatus() {
-    cd slstatus || exit
-    make
-    sudo make install
+    cd slstatus || { log_error "Failed to change directory to slstatus"; exit 1; }
+    make || { log_error "Failed to build slstatus"; exit 1; }
+    sudo make install || { log_error "Failed to install slstatus"; exit 1; }
     cd ..
 }
 
-# Call the function
+# Call the functions
 install_nerd_font
-
-# Call the function
 clone_config_folders
-
-# Call the function
 picom_animations
-
-# Call the function
 configure_backgrounds
-
-#Call the function
 slstatus
 
 echo "All dependencies installed successfully."
