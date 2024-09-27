@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#error runtime dependency libev not found tried pkgconfig and cmake
+
 # Function to log errors
 log_error() {
     echo "[ERROR] $1" >&2
@@ -51,8 +53,8 @@ install_fedora() {
 # Function to install dependencies for Arch-based distributions
 install_arch() {
     sudo pacman -Su --noconfirm || { log_error "Failed to update package list"; exit 1; }
-    sudo pacman -S --needed  base-devel libconfig git dbus libev libx11 libxcb libxext libgl libegl libepoxy meson pcre2 \
-    pixman uthash xcb-util-image xcb-util-renderutil xorgproto cmake libxft libimlib2 libxinerama libxcb-res xorg-xev \
+    sudo pacman -S --needed --noconfirm base-devel libconfig git dbus libev libx11 libxcb libxext libgl libegl libepoxy meson pcre2 \
+    pixman uthash xcb-util-image xcb-util-renderutil xorgproto cmake libxft imlib2 libxinerama xcb-util-wm xorg-xev \
     xorg-xbacklight alsa-utils thunar feh flameshot dunst rofi alacritty unzip wget curl sddm \
     bash-completion || { log_error "Failed to install dependencies"; exit 1; }
     sudo pacman -Rns "$(pacman -Qdtq)" || { log_error "Failed to remove unused packages"; }
