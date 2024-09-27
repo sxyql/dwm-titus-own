@@ -37,7 +37,7 @@ install_redhat() {
     sudo yum autoremove || { log_error "Failed to remove unused packages"; }
     sudo yum clean all || { log_error "Failed to clean package cache"; }
 }
-starship zoxide
+
 # Function to install dependencies for Fedora
 install_fedora() {
     sudo dnf update || { log_error "Failed to update package list and installing updates"; exit 1; }
