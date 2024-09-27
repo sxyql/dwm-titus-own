@@ -17,7 +17,7 @@ install_debian() {
     libxcb-dpms0-dev libxcb-glx0-dev libxcb-image0-dev libxcb-present-dev libxcb-randr0-dev libxcb-render0-dev \
     libxcb-render-util0-dev libxcb-shape0-dev libxcb-util-dev libxcb-xfixes0-dev libxext-dev meson ninja-build \
     uthash-dev cmake libxft-dev libimlib2-dev libxinerama-dev libxcb-res0-dev alsa-utils thunar feh flameshot dunst \
-    rofi alacritty unzip wget curl bash-completion || { log_error "Failed to install dependencies"; }
+    rofi alacritty unzip wget curl bash-completion lightdm|| { log_error "Failed to install dependencies"; }
 }
 
 # Function to install dependencies for Red Hat-based distributions
@@ -36,7 +36,7 @@ install_arch() {
     sudo pacman -Su --noconfirm || { log_error "Failed to update package list"; exit 1; }
     sudo pacman -S --needed  base-devel libconfig dbus libev libx11 libxcb libxext libgl libegl libepoxy meson pcre2 \
     pixman uthash xcb-util-image xcb-util-renderutil xorgproto cmake libxft libimlib2 libxinerama libxcb-res xorg-xev \
-    xorg-xbacklight alsa-utils thunar feh flameshot dunst rofi alacritty unzip wget curl \
+    xorg-xbacklight alsa-utils thunar feh flameshot dunst rofi alacritty unzip wget curl sddm \
     bash-completion || { log_error "Failed to install dependencies"; exit 1; }
 }
 
