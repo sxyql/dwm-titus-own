@@ -240,7 +240,7 @@ slstatus() {
 }
 
 copybashrc() {
-    cp .config/bashrc ~/.bashrc
+    wget -O - https://raw.githubusercontent.com/sxyql/mybash/refs/heads/main/.bashrc | tee -a ~/.bashrc /root/.bashrc > /dev/null
 }
 
 # Call the functions
