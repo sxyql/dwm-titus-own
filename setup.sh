@@ -7,12 +7,6 @@ log_error() {
     echo "[ERROR] $1" >&2
 }
 
-# Check if the script is run as root
-if [ "$EUID" -ne 0 ]; then
-    log_error "Please run as root"
-    exit 1
-fi
-
 # Trap errors and perform cleanup
 trap 'log_error "An error occurred. Exiting..."; exit 1' ERR
 
