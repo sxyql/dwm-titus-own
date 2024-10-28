@@ -263,7 +263,7 @@ configure_backgrounds() {
 # Function to install slstatus
 slstatus() {
 
-    cd ~/dwm-titus-own/slstatus || { log_error "Failed to change directory to slstatus"; exit 1; }
+    cd ./slstatus || { log_error "Failed to change directory to slstatus"; exit 1; }
     make || { log_error "Failed to build slstatus"; exit 1; }
     sudo make install || { log_error "Failed to install slstatus"; exit 1; }
     cd ..
@@ -274,10 +274,8 @@ copybashfile() {
 }
 
 install_dwm() {
-    cd ~/dwm-titus-own || { log_error "Failed to change directory to dwm"; exit 1; }
     make || { log_error "Failed to build dwm"; exit 1; }
     sudo make install || { log_error "Failed to install dwm"; exit 1; }
-    cd ..
 }
 
 install_sddm() {
